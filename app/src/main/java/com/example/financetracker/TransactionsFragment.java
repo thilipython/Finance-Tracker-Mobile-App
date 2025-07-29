@@ -27,13 +27,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class TransactionsFragment extends Fragment {
+public class TransactionsFragment extends Fragment implements TransactionAdapter.OnTransactionClickListener {
 
     private RecyclerView recyclerView;
     private TransactionAdapter adapter;
     private AppDatabase db;
     private TextView tvBalance;
     private FloatingActionButton fabAddTransaction;
+
+    private static final int ADD_TRANSACTION_REQUEST = 1;
+    private static final int EDIT_TRANSACTION_REQUEST = 2;
 
     @Nullable
     @Override
@@ -47,12 +50,12 @@ public class TransactionsFragment extends Fragment {
         db = AppDatabase.getInstance(requireContext());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TransactionAdapter(new ArrayList<>());
+        adapter = new TransactionAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
 
         fabAddTransaction.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddTransactionActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, ADD_TRANSACTION_REQUEST);
         });
 
         loadTransactions();
@@ -64,6 +67,19 @@ public class TransactionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupSwipeToDelete();
+    }
+
+    @Override
+    public void onTransactionClick(Transaction transaction) {
+        Intent intent = new Intent(getActivity(), AddTransactionActivity.class);
+        intent.putExtra("EDIT_MODE", true);
+        intent.putExtra("TRANSACTION_ID", transaction.id);
+        startActivityForResult(intent, EDIT_TRANSACTION_REQUEST);
+    }
+
+    @Override
+    public void onTransactionLongClick(Transaction transaction) {
+        // Optional: Implement long click behavior if needed
     }
 
     private void setupSwipeToDelete() {
@@ -216,8 +232,7 @@ public class TransactionsFragment extends Fragment {
             Context context = contextRef.get();
             if (context != null && isAdded()) {
                 if (success) {
-                    adapter.getTransactions().remove(position);
-                    adapter.notifyItemRemoved(position);
+                    adapter.removeTransaction(position);
                     updateBalance();
                     Toast.makeText(context, "Transaction deleted", Toast.LENGTH_SHORT).show();
                 } else {

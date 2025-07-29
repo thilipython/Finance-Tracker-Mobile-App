@@ -15,10 +15,16 @@ import java.util.List;
 public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder> {
     private List<Budget> budgets;
     private final Context context;
+    private final OnBudgetClickListener listener;
 
-    public BudgetAdapter(List<Budget> budgets, Context context) {
+    public interface OnBudgetClickListener {
+        void onBudgetClick(Budget budget);
+    }
+
+    public BudgetAdapter(List<Budget> budgets, Context context, OnBudgetClickListener listener) {
         this.budgets = budgets;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,19 +41,13 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
         holder.tvCategory.setText(budget.category);
         holder.tvLimit.setText(String.format("Limit: $%.2f", budget.limit));
 
-        // Calculate percentage spent
         double percentage = (budget.currentSpending / budget.limit) * 100;
-        percentage = Math.min(percentage, 100); // Cap at 100%
+        percentage = Math.min(percentage, 100);
 
         holder.progressBar.setProgress((int) percentage);
+        holder.tvSpent.setText(String.format("Spent: $%.2f (%.0f%%)",
+                budget.currentSpending, percentage));
 
-        // Add this line to properly display spent amount:
-        holder.tvSpent.setText(String.format("Spent: $%.2f of $%.2f (%.0f%%)",
-                budget.currentSpending,
-                budget.limit,
-                percentage));
-
-        // Set progress bar color based on percentage
         int color;
         if (percentage < 75) {
             color = ContextCompat.getColor(context, R.color.progress_green);
@@ -56,7 +56,14 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
         } else {
             color = ContextCompat.getColor(context, R.color.progress_red);
         }
+
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(color));
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onBudgetClick(budget);
+            }
+        });
     }
 
     @Override

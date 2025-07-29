@@ -14,9 +14,16 @@ import java.util.Locale;
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
     private List<Transaction> transactions;
+    private OnTransactionClickListener listener;
 
-    public TransactionAdapter(List<Transaction> transactions) {
+    public interface OnTransactionClickListener {
+        void onTransactionClick(Transaction transaction);
+        void onTransactionLongClick(Transaction transaction);
+    }
+
+    public TransactionAdapter(List<Transaction> transactions, OnTransactionClickListener listener) {
         this.transactions = new ArrayList<>(transactions);
+        this.listener = listener;
     }
 
     public void setTransactions(List<Transaction> newTransactions) {
@@ -55,6 +62,21 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         } else {
             holder.tvDate.setVisibility(View.GONE);
         }
+
+        // Set click listeners
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onTransactionClick(transaction);
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (listener != null) {
+                listener.onTransactionLongClick(transaction);
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -64,6 +86,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public void removeTransaction(int position) {
+        transactions.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void updateTransaction(Transaction transaction, int position) {
+        transactions.set(position, transaction);
+        notifyItemChanged(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

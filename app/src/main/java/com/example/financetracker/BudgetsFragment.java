@@ -25,9 +25,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class BudgetsFragment extends Fragment {
+public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetClickListener {
 
     private static final int REQUEST_ADD_BUDGET = 1;
+    private static final int REQUEST_EDIT_BUDGET = 2;
 
     private RecyclerView recyclerView;
     private BudgetAdapter adapter;
@@ -49,10 +50,10 @@ public class BudgetsFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new BudgetAdapter(new ArrayList<>(), requireContext());
+        adapter = new BudgetAdapter(new ArrayList<>(), requireContext(), this);
         recyclerView.setAdapter(adapter);
 
-        fabAddBudget.setOnClickListener(v -> launchAddBudgetActivity());
+        fabAddBudget.setOnClickListener(v -> launchAddBudgetActivity(false, -1));
 
         loadBudgets();
 
@@ -63,6 +64,20 @@ public class BudgetsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupSwipeToDelete();
+    }
+
+    @Override
+    public void onBudgetClick(Budget budget) {
+        launchAddBudgetActivity(true, budget.id);
+    }
+
+    private void launchAddBudgetActivity(boolean isEditMode, int budgetId) {
+        Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
+        intent.putExtra("EDIT_MODE", isEditMode);
+        if (isEditMode) {
+            intent.putExtra("BUDGET_ID", budgetId);
+        }
+        startActivityForResult(intent, isEditMode ? REQUEST_EDIT_BUDGET : REQUEST_ADD_BUDGET);
     }
 
     private void setupSwipeToDelete() {
@@ -102,11 +117,6 @@ public class BudgetsFragment extends Fragment {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(recyclerView);
-    }
-
-    private void launchAddBudgetActivity() {
-        Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
-        startActivityForResult(intent, REQUEST_ADD_BUDGET);
     }
 
     private void loadBudgets() {
@@ -158,7 +168,7 @@ public class BudgetsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADD_BUDGET && resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             loadBudgets();
         }
     }

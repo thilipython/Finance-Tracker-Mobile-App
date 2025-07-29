@@ -16,6 +16,8 @@ public class AddBudgetActivity extends AppCompatActivity {
     private AutoCompleteTextView actvCategory;
     private AppDatabase db;
     private Executor executor = Executors.newSingleThreadExecutor();
+    private boolean isEditMode = false;
+    private int budgetId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,13 @@ public class AddBudgetActivity extends AppCompatActivity {
         // Initialize database
         db = AppDatabase.getInstance(getApplicationContext());
 
+        // Check if in edit mode
+        if (getIntent().hasExtra("EDIT_MODE")) {
+            isEditMode = true;
+            budgetId = getIntent().getIntExtra("BUDGET_ID", -1);
+            loadBudgetData();
+        }
+
         // Setup category dropdown
         setupCategoryDropdown();
 
@@ -39,16 +48,26 @@ public class AddBudgetActivity extends AppCompatActivity {
     }
 
     private void setupCategoryDropdown() {
-        // Get categories from resources
         String[] categories = getResources().getStringArray(R.array.categories_array);
-
-        // Create and set adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
                 categories
         );
         actvCategory.setAdapter(adapter);
+    }
+
+    private void loadBudgetData() {
+        executor.execute(() -> {
+            Budget budget = db.budgetDao().getBudgetById(budgetId);
+            runOnUiThread(() -> {
+                if (budget != null) {
+                    etTitle.setText(budget.title);
+                    etLimit.setText(String.valueOf(budget.limit));
+                    actvCategory.setText(budget.category);
+                }
+            });
+        });
     }
 
     private void saveBudget() {
@@ -74,29 +93,56 @@ public class AddBudgetActivity extends AppCompatActivity {
         try {
             double limit = Double.parseDouble(limitText);
             Budget budget = new Budget();
-            budget.title = title;  // Add this field to your Budget entity
+            budget.title = title;
             budget.category = category;
             budget.limit = limit;
             budget.currentSpending = 0;
 
-            executor.execute(() -> {
-                try {
-                    db.budgetDao().insert(budget);
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Budget saved successfully", Toast.LENGTH_SHORT).show();
-                        setResult(RESULT_OK);
-                        finish();
-                    });
-                } catch (Exception e) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Failed to save budget: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                    });
-                }
-            });
+            if (isEditMode) {
+                budget.id = budgetId;
+                updateBudget(budget);
+            } else {
+                insertBudget(budget);
+            }
 
         } catch (NumberFormatException e) {
             etLimit.setError("Invalid amount format");
         }
+    }
+
+    private void insertBudget(Budget budget) {
+        executor.execute(() -> {
+            try {
+                db.budgetDao().insert(budget);
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Budget saved successfully", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Failed to save budget: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
+            }
+        });
+    }
+
+    private void updateBudget(Budget budget) {
+        executor.execute(() -> {
+            try {
+                db.budgetDao().update(budget);
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Budget updated successfully", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Failed to update budget: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
+            }
+        });
     }
 }

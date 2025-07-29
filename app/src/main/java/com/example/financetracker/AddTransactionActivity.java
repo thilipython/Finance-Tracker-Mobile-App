@@ -12,7 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,13 +22,15 @@ public class AddTransactionActivity extends AppCompatActivity {
     private AutoCompleteTextView actvCategory;
     private RadioGroup radioGroupType;
     private AppDatabase db;
+    private boolean isEditMode = false;
+    private int transactionId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
 
-        // Initialize all views
+        // Initialize views
         etTitle = findViewById(R.id.etTitle);
         etAmount = findViewById(R.id.etAmount);
         actvCategory = findViewById(R.id.actvCategory);
@@ -38,6 +39,13 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         // Initialize database
         db = AppDatabase.getInstance(getApplicationContext());
+
+        // Check if in edit mode
+        if (getIntent().hasExtra("EDIT_MODE")) {
+            isEditMode = true;
+            transactionId = getIntent().getIntExtra("TRANSACTION_ID", -1);
+            new LoadTransactionTask().execute();
+        }
 
         // Setup category dropdown
         setupCategoryDropdown();
@@ -54,6 +62,27 @@ public class AddTransactionActivity extends AppCompatActivity {
                 categories
         );
         actvCategory.setAdapter(adapter);
+    }
+
+    private class LoadTransactionTask extends AsyncTask<Void, Void, Transaction> {
+        @Override
+        protected Transaction doInBackground(Void... voids) {
+            return db.transactionDao().getById(transactionId);
+        }
+
+        @Override
+        protected void onPostExecute(Transaction transaction) {
+            if (transaction != null) {
+                etTitle.setText(transaction.title);
+                etAmount.setText(String.valueOf(Math.abs(transaction.amount)));
+                actvCategory.setText(transaction.category);
+
+                RadioButton radioToCheck = transaction.isExpense ?
+                        findViewById(R.id.radioExpense) :
+                        findViewById(R.id.radioIncome);
+                radioToCheck.setChecked(true);
+            }
+        }
     }
 
     private void saveTransaction() {
@@ -89,7 +118,6 @@ public class AddTransactionActivity extends AppCompatActivity {
             boolean isExpense = selectedId == R.id.radioExpense;
             double transactionAmount = isExpense ? -Math.abs(amount) : Math.abs(amount);
 
-            // Create transaction with title
             Transaction transaction = new Transaction();
             transaction.title = title;
             transaction.amount = transactionAmount;
@@ -98,8 +126,12 @@ public class AddTransactionActivity extends AppCompatActivity {
             transaction.formattedDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                     .format(new Date());
 
-            // Save transaction
-            new SaveTransactionTask(transaction, isExpense ? amount : 0).execute();
+            if (isEditMode) {
+                transaction.id = transactionId;
+                new UpdateTransactionTask(transaction).execute();
+            } else {
+                new SaveTransactionTask(transaction, isExpense ? amount : 0).execute();
+            }
 
         } catch (NumberFormatException e) {
             etAmount.setError("Invalid amount format");
@@ -143,6 +175,42 @@ public class AddTransactionActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(AddTransactionActivity.this,
                         "Failed to save transaction: " + (exception != null ? exception.getMessage() : ""),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private class UpdateTransactionTask extends AsyncTask<Void, Void, Boolean> {
+        private final Transaction transaction;
+        private Exception exception;
+
+        UpdateTransactionTask(Transaction transaction) {
+            this.transaction = transaction;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                db.transactionDao().update(transaction);
+                return true;
+            } catch (Exception e) {
+                this.exception = e;
+                Log.e("UpdateTransaction", "Error updating transaction", e);
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                Toast.makeText(AddTransactionActivity.this,
+                        "Transaction updated successfully",
+                        Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+            } else {
+                Toast.makeText(AddTransactionActivity.this,
+                        "Failed to update transaction: " + (exception != null ? exception.getMessage() : ""),
                         Toast.LENGTH_LONG).show();
             }
         }
