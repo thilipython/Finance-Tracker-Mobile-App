@@ -1,6 +1,7 @@
 package com.example.financetracker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -29,14 +31,15 @@ import java.util.Locale;
 
 public class TransactionsFragment extends Fragment implements TransactionAdapter.OnTransactionClickListener {
 
+    private static final int ADD_TRANSACTION_REQUEST = 1;
+    private static final int EDIT_TRANSACTION_REQUEST = 2;
+
     private RecyclerView recyclerView;
     private TransactionAdapter adapter;
     private AppDatabase db;
     private TextView tvBalance;
     private FloatingActionButton fabAddTransaction;
-
-    private static final int ADD_TRANSACTION_REQUEST = 1;
-    private static final int EDIT_TRANSACTION_REQUEST = 2;
+    private Button btnInsights;
 
     @Nullable
     @Override
@@ -47,6 +50,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
         recyclerView = view.findViewById(R.id.recyclerViewTransactions);
         tvBalance = view.findViewById(R.id.tvBalance);
         fabAddTransaction = view.findViewById(R.id.fabAddTransaction);
+        btnInsights = view.findViewById(R.id.btnShowInsights);
         db = AppDatabase.getInstance(requireContext());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -58,19 +62,35 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
             startActivityForResult(intent, ADD_TRANSACTION_REQUEST);
         });
 
-        loadTransactions();
+        btnInsights.setOnClickListener(v -> {
+            AlertDialog loadingDialog = new AlertDialog.Builder(requireContext())
+                    .setTitle("Analyzing...")
+                    .setMessage("Crunching your numbers...")
+                    .setCancelable(false)
+                    .show();
 
+            new Thread(() -> {
+                SpendingAnalyzer analyzer = new SpendingAnalyzer(requireContext());
+                String analysis = analyzer.analyze();
+
+                requireActivity().runOnUiThread(() -> {
+                    loadingDialog.dismiss();
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Your Spending Insights")
+                            .setMessage(analysis)
+                            .setPositiveButton("OK", null)
+                            .show();
+                });
+            }).start();
+        });
+
+        loadTransactions();
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setupSwipeToDelete();
-    }
-
-    @Override
     public void onTransactionClick(Transaction transaction) {
+        // Handle click (edit)
         Intent intent = new Intent(getActivity(), AddTransactionActivity.class);
         intent.putExtra("EDIT_MODE", true);
         intent.putExtra("TRANSACTION_ID", transaction.id);
@@ -79,7 +99,25 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
     @Override
     public void onTransactionLongClick(Transaction transaction) {
-        // Optional: Implement long click behavior if needed
+        // Handle long click (delete confirmation)
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Transaction")
+                .setMessage("Are you sure you want to delete this transaction?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    int position = adapter.getTransactions().indexOf(transaction);
+                    if (position != -1) {
+                        deleteTransaction(transaction, position);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupSwipeToDelete();
     }
 
     private void setupSwipeToDelete() {
@@ -232,7 +270,8 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
             Context context = contextRef.get();
             if (context != null && isAdded()) {
                 if (success) {
-                    adapter.removeTransaction(position);
+                    adapter.getTransactions().remove(position);
+                    adapter.notifyItemRemoved(position);
                     updateBalance();
                     Toast.makeText(context, "Transaction deleted", Toast.LENGTH_SHORT).show();
                 } else {
@@ -241,5 +280,6 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
                 }
             }
         }
-    }
-}
+    } // This closes DeleteTransactionTask
+
+} // This closes TransactionsFragment class
