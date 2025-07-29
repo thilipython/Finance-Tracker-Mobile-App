@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Finance Tracker</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="total_balance">Total Balance: %s</string>
+    <string name="empty_budgets_message">No budgets found\nClick the + button to add one</string>
+    <string name="add_budget">Add budget</string>
+    <string name="failed_to_load_budgets">Failed to load budgets</string>
+    <string name="transaction_deleted">Transaction deleted</string>
+    <string name="delete_failed">Delete failed</string>
+    <string name="budget_deleted">Budget deleted</string>
+    <string name="budget_delete_failed">Failed to delete budget</string>
+    <string-array name="categories_array">
+        <item>Food</item>
+        <item>Transport</item>
+        <item>Entertainment</item>
+        <item>Utilities</item>
+        <item>Other</item>
+    </string-array>
+</resources>
