@@ -14,6 +14,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        aaptOptions {
+            noCompress "tflite"  // Prevents compression of .tflite files
+        }
     }
 
     defaultConfig {
@@ -48,4 +52,5 @@ dependencies {
     implementation "androidx.room:room-runtime:2.4.2"
     annotationProcessor "androidx.room:room-compiler:2.4.2"
     implementation 'com.google.android.material:material:1.9.0'
+    implementation 'org.tensorflow:tensorflow-lite:2.12.0'
 }

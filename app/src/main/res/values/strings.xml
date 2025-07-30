@@ -1,20 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Info -->
     <string name="app_name">Finance Tracker</string>
+
+    <!-- Common UI -->
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+
+    <!-- Transactions -->
     <string name="add_transaction">Add Transaction</string>
+    <string name="edit_transaction">Edit Transaction</string>
     <string name="total_balance">Total Balance: %s</string>
-    <string name="empty_budgets_message">No budgets found\nClick the + button to add one</string>
-    <string name="add_budget">Add budget</string>
-    <string name="failed_to_load_budgets">Failed to load budgets</string>
     <string name="transaction_deleted">Transaction deleted</string>
     <string name="delete_failed">Delete failed</string>
+    <string name="title">Title</string>
+    <string name="amount">Amount</string>
+    <string name="category">Category</string>
+    <string name="type">Type</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+
+    <!-- Budgets -->
+    <string name="add_budget">Add Budget</string>
+    <string name="edit_budget">Edit Budget</string>
+    <string name="budget_limit">Budget Limit</string>
+    <string name="current_spending">Current Spending</string>
+    <string name="empty_budgets_message">No budgets found\nClick the + button to add one</string>
     <string name="budget_deleted">Budget deleted</string>
     <string name="budget_delete_failed">Failed to delete budget</string>
+
+    <!-- Savings Goals -->
+    <string name="title_savings_goals">Savings Goals</string>
+    <string name="add_savings_goal">Add Savings Goal</string>
+    <string name="edit_savings_goal">Edit Savings Goal</string>
+    <string name="hint_goal_name">Goal Name</string>
+    <string name="hint_goal_description">Description (Optional)</string>
+    <string name="hint_target_amount">Target Amount</string>
+    <string name="current_amount">Current Amount</string>
+    <string name="button_select_date">Select Target Date</string>
+    <string name="button_save_goal">Save Goal</string>
+    <string name="empty_savings_goals">No savings goals yet. Click + to add one!</string>
+    <string name="target_date">Target Date</string>
+    <string name="allocate_to_goal">Allocate to Savings Goal</string>
+    <string name="amount_to_allocate">Amount to Allocate</string>
+
+    <!-- Categories -->
     <string-array name="categories_array">
         <item>Food</item>
         <item>Transport</item>
-        <item>Entertainment</item>
+        <item>Housing</item>
         <item>Utilities</item>
+        <item>Healthcare</item>
+        <item>Entertainment</item>
+        <item>Education</item>
+        <item>Personal</item>
+        <item>Income</item>
         <item>Other</item>
     </string-array>
+
+    <!-- Validation Messages -->
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_amount">Invalid amount</string>
+    <string name="error_allocation_exceeds_amount">Allocation exceeds transaction amount</string>
+
+    <!-- Insights -->
+    <string name="spending_insights">Spending Insights</string>
+    <string name="total_spent">Total Spent: %s</string>
+    <string name="total_income">Total Income: %s</string>
+
+    <string name="select_goal">Select Goal</string>
+    <string name="error_select_category">Please select a category</string>
+    <string name="error_select_transaction_type">Please select transaction type</string>
+    <string name="transaction_saved_successfully">Transaction saved successfully</string>
+    <string name="transaction_updated_successfully">Transaction updated successfully</string>
+    <string name="failed_to_save_transaction">Failed to save transaction</string>
+    <string name="failed_to_update_transaction">Failed to update transaction</string>
 </resources>

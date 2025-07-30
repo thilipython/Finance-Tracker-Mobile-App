@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface TransactionDao {
     @Insert
-    void insert(Transaction transaction);
+    long insert(Transaction transaction); // Change return type from void to long
 
     @Query("SELECT * FROM transactions")
     List<Transaction> getAll();
@@ -29,4 +29,7 @@ public interface TransactionDao {
 
     @Update
     void update(Transaction transaction);
+
+    @Query("SELECT * FROM transactions WHERE goal_id = :goalId")
+    List<Transaction> getTransactionsForGoal(int goalId);
 }

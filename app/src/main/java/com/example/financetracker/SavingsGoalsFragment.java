@@ -1,7 +1,6 @@
 package com.example.financetracker;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetClickListener {
+public class SavingsGoalsFragment extends Fragment implements SavingsGoalAdapter.OnSavingsGoalClickListener {
 
-    private static final int REQUEST_ADD_BUDGET = 1;
-    private static final int REQUEST_EDIT_BUDGET = 2;
+    private static final int REQUEST_ADD_GOAL = 1;
+    private static final int REQUEST_EDIT_GOAL = 2;
 
     private RecyclerView recyclerView;
-    private BudgetAdapter adapter;
+    private SavingsGoalAdapter adapter;
     private AppDatabase db;
     private ExecutorService executor;
     private TextView tvEmptyState;
@@ -40,44 +40,28 @@ public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetC
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_budgets, container, false);
+        View view = inflater.inflate(R.layout.fragment_savings_goals, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerViewBudgets);
+        recyclerView = view.findViewById(R.id.recyclerViewSavingsGoals);
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
-        FloatingActionButton fabAddBudget = view.findViewById(R.id.fabAddBudget);
+        FloatingActionButton fabAddGoal = view.findViewById(R.id.fabAddGoal);
 
         db = AppDatabase.getInstance(requireContext());
         executor = Executors.newSingleThreadExecutor();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new BudgetAdapter(new ArrayList<>(), requireContext(), this);
+        adapter = new SavingsGoalAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
 
-        fabAddBudget.setOnClickListener(v -> launchAddBudgetActivity(false, -1));
+        fabAddGoal.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddSavingsGoalActivity.class);
+            startActivityForResult(intent, REQUEST_ADD_GOAL);
+        });
 
-        loadBudgets();
+        loadGoals();
+        setupSwipeToDelete();
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setupSwipeToDelete();
-    }
-
-    @Override
-    public void onBudgetClick(Budget budget) {
-        launchAddBudgetActivity(true, budget.id);
-    }
-
-    private void launchAddBudgetActivity(boolean isEditMode, int budgetId) {
-        Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
-        intent.putExtra("EDIT_MODE", isEditMode);
-        if (isEditMode) {
-            intent.putExtra("BUDGET_ID", budgetId);
-        }
-        startActivityForResult(intent, isEditMode ? REQUEST_EDIT_BUDGET : REQUEST_ADD_BUDGET);
     }
 
     private void setupSwipeToDelete() {
@@ -94,8 +78,8 @@ public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetC
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                Budget budget = adapter.getBudgetAtPosition(position);
-                deleteBudget(budget, position);
+                SavingsGoal goal = adapter.getGoalAtPosition(position);
+                deleteGoal(goal, position);
             }
 
             @Override
@@ -119,29 +103,45 @@ public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetC
         }).attachToRecyclerView(recyclerView);
     }
 
-
-
-    private void deleteBudget(Budget budget, int position) {
+    private void deleteGoal(SavingsGoal goal, int position) {
         executor.execute(() -> {
             try {
-                db.budgetDao().delete(budget);
+                db.savingsGoalDao().delete(goal);
                 requireActivity().runOnUiThread(() -> {
-                    adapter.removeBudgetAtPosition(position);
-                    Toast.makeText(requireContext(), "Budget deleted", Toast.LENGTH_SHORT).show();
-                    updateEmptyState(adapter.getBudgets());
+                    adapter.removeGoalAtPosition(position);
+                    Toast.makeText(requireContext(), "Goal deleted", Toast.LENGTH_SHORT).show();
+                    updateEmptyState(adapter.getItemCount() == 0);
                 });
             } catch (Exception e) {
-                Log.e("BudgetsFragment", "Error deleting budget", e);
+                Log.e("SavingsGoalsFragment", "Error deleting goal", e);
                 requireActivity().runOnUiThread(() -> {
                     adapter.notifyItemChanged(position);
-                    Toast.makeText(requireContext(), "Failed to delete budget", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Failed to delete goal", Toast.LENGTH_SHORT).show();
                 });
             }
         });
     }
 
-    private void updateEmptyState(List<Budget> budgets) {
-        if (budgets.isEmpty()) {
+    @Override
+    public void onSavingsGoalClick(SavingsGoal goal) {
+        Intent intent = new Intent(getActivity(), AddSavingsGoalActivity.class);
+        intent.putExtra("EDIT_MODE", true);
+        intent.putExtra("GOAL_ID", goal.id);
+        startActivityForResult(intent, REQUEST_EDIT_GOAL);
+    }
+
+    private void loadGoals() {
+        executor.execute(() -> {
+            List<SavingsGoal> goals = db.savingsGoalDao().getAllGoals();
+            requireActivity().runOnUiThread(() -> {
+                adapter.setSavingsGoals(goals);
+                updateEmptyState(goals.isEmpty());
+            });
+        });
+    }
+
+    private void updateEmptyState(boolean isEmpty) {
+        if (isEmpty) {
             tvEmptyState.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -150,37 +150,13 @@ public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetC
         }
     }
 
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            if (resultCode == Activity.RESULT_OK) {
-                // Force refresh budgets when returning from AddBudgetActivity
-                loadBudgets();
-            }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            loadGoals();
         }
-
-        private void loadBudgets() {
-            executor.execute(() -> {
-                try {
-                    List<Budget> budgets = db.budgetDao().getAllBudgets();
-                    requireActivity().runOnUiThread(() -> {
-                        adapter.setBudgets(budgets);
-                        updateEmptyState(budgets);
-
-                        // Debug log
-                        Log.d("Budgets", "Loaded " + budgets.size() + " budgets");
-                        for (Budget b : budgets) {
-                            Log.d("Budgets", b.title + " - $" + b.limit);
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.e("Budgets", "Load error", e);
-                    requireActivity().runOnUiThread(() ->
-                            Toast.makeText(requireContext(), "Load failed", Toast.LENGTH_SHORT).show());
-                }
-            });
-        }
-
+    }
 
     @Override
     public void onDestroy() {

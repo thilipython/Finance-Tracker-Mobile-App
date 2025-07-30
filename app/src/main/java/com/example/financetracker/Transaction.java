@@ -23,4 +23,10 @@ public class Transaction {
 
     @ColumnInfo(name = "created_at")
     public long createdAt = System.currentTimeMillis();
+
+    @ColumnInfo(name = "is_goal_deposit")
+    public boolean isGoalDeposit = false;
+
+    @ColumnInfo(name = "goal_id")
+    public int goalId = -1;
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.financetracker">
 
     <application
@@ -8,7 +9,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FinanceTracker">
+        android:theme="@style/Theme.FinanceTracker"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <!-- MainActivity (launcher activity) -->
         <activity
@@ -30,7 +32,15 @@
         <!-- AddTransactionActivity -->
         <activity
             android:name=".AddTransactionActivity"
-            android:exported="false"/>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- AddSavingsGoalActivity -->
+        <activity
+            android:name=".AddSavingsGoalActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog"
+            android:windowSoftInputMode="adjustResize"/>
 
     </application>
 </manifest>

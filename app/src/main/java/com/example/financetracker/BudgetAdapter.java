@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder> {
@@ -72,8 +74,8 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
     }
 
     public void setBudgets(List<Budget> newBudgets) {
-        this.budgets = newBudgets;
-        notifyDataSetChanged();
+        this.budgets = new ArrayList<>(newBudgets); // Create new list to force refresh
+        notifyDataSetChanged(); // Important: trigger UI update
     }
 
     public Budget getBudgetAtPosition(int position) {

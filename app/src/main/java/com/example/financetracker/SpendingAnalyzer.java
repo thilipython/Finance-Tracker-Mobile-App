@@ -1,19 +1,24 @@
-// File: SpendingAnalyzer.java
 package com.example.financetracker;
 
 import android.content.Context;
-
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Collections;
 
 public class SpendingAnalyzer {
     private final AppDatabase db;
+    private SpendingPredictor predictor;
 
     public SpendingAnalyzer(Context context) {
         db = AppDatabase.getInstance(context);
+        try {
+            predictor = new SpendingPredictor(context);
+        } catch (IOException e) {
+            predictor = null;
+        }
     }
 
     public String analyze() {
@@ -38,16 +43,16 @@ public class SpendingAnalyzer {
         // 2. Generate insights
         StringBuilder insights = new StringBuilder();
         insights.append("💸 Total Spent: $").append(String.format("%.2f", totalSpent))
-                .append("\n\n💰 Total Income: $").append(String.format("%.2f", totalIncome))
+                .append("\n💰 Total Income: $").append(String.format("%.2f", totalIncome))
                 .append("\n\n");
 
         // 3. Top categories analysis
         if (!categorySpending.isEmpty()) {
             insights.append("📊 Spending Breakdown:\n");
-            List<Map.Entry<String, Double>> sortedCategories = new ArrayList<>(categorySpending.entrySet());
+            List<Map.Entry<String, Double>> sortedCategories =
+                    new ArrayList<>(categorySpending.entrySet());
             sortedCategories.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
-            // Using traditional loop instead of lambda
             int count = Math.min(3, sortedCategories.size());
             for (int i = 0; i < count; i++) {
                 Map.Entry<String, Double> entry = sortedCategories.get(i);
@@ -61,22 +66,47 @@ public class SpendingAnalyzer {
             }
         }
 
-        // 4. Savings advice
+        // 4. AI Prediction
+        if (predictor != null && transactions.size() >= 3) {
+            try {
+                float prediction = predictor.predictNextMonthSpending(
+                        getLastNTransactions(transactions, 3));
+                insights.append("\n🔮 AI Prediction: Next month ≈ $")
+                        .append(String.format("%.2f", prediction));
+            } catch (Exception e) {
+                insights.append("\n⚠️ Prediction unavailable");
+            }
+        }
+
+        // 5. Savings advice
         if (totalSpent > 0 && totalIncome > 0) {
             double savingsRate = ((totalIncome - totalSpent) / totalIncome) * 100;
-            insights.append("\n💡 Advice:\n");
+            insights.append("\n\n💡 Advice:\n");
 
             if (savingsRate > 20) {
-                insights.append("Great job! You're saving ").append(String.format("%.1f", savingsRate))
+                insights.append("Great job! You're saving ")
+                        .append(String.format("%.1f", savingsRate))
                         .append("% of your income.");
             } else if (savingsRate > 0) {
                 insights.append("Try saving more! Current rate: ")
-                        .append(String.format("%.1f", savingsRate)).append("%");
+                        .append(String.format("%.1f", savingsRate))
+                        .append("%");
             } else {
                 insights.append("Warning: You're spending more than you earn!");
             }
         }
 
         return insights.toString();
+    }
+
+    private List<Transaction> getLastNTransactions(List<Transaction> transactions, int n) {
+        int startIndex = Math.max(0, transactions.size() - n);
+        return transactions.subList(startIndex, transactions.size());
+    }
+
+    public void close() {
+        if (predictor != null) {
+            predictor.close();
+        }
     }
 }
