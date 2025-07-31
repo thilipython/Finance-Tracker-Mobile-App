@@ -23,7 +23,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:layout_marginBottom="180dp"
-    android:elevation="4dp"/>
+        android:elevation="4dp"/>
 
     <Button
         android:id="@+id/btnAnalyze"

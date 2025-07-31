@@ -1,32 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnShowInsights"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Insights"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="80dp"/>
-
+    <!-- Total Balance Display -->
     <TextView
         android:id="@+id/tvBalance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total Balance: $0.00"
-        android:textSize="24sp" />
+        android:text="Total Balance: £0.00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp" />
 
+    <!-- View Insights Button positioned BELOW the balance, aligned to right -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnShowInsights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Insights"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#D8A362"
+        android:layout_below="@id/tvBalance"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="16dp"
+        app:cornerRadius="20dp"
+        app:iconGravity="textStart"
+        app:elevation="4dp" />
+
+    <!-- Transaction List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTransactions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tvBalance"
-        android:padding="8dp" />
+        android:layout_below="@id/btnShowInsights"
+        android:layout_above="@id/fabAddTransaction"
+        android:paddingTop="8dp"
+        android:paddingBottom="72dp"
+        android:clipToPadding="false" />
 
+    <!-- Floating Add Transaction Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddTransaction"
         android:layout_width="wrap_content"
@@ -34,6 +56,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_menu_add"
+        android:contentDescription="Add Transaction"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="#D8A362"
         app:tint="@android:color/white" />
 </RelativeLayout>

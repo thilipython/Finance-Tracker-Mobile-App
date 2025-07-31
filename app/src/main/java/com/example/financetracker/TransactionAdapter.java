@@ -47,7 +47,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.tvTitle.setText(transaction.title);
         holder.tvCategory.setText(transaction.category);
 
-        String amountText = String.format(Locale.US, "%s%.2f",
+        String amountText = String.format(Locale.UK, "%s%.2f",
                 transaction.amount >= 0 ? "+" : "",
                 Math.abs(transaction.amount));
         holder.tvAmount.setText(amountText);

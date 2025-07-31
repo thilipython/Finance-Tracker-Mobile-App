@@ -42,8 +42,8 @@ public class SpendingAnalyzer {
 
         // 2. Generate insights
         StringBuilder insights = new StringBuilder();
-        insights.append("💸 Total Spent: $").append(String.format("%.2f", totalSpent))
-                .append("\n💰 Total Income: $").append(String.format("%.2f", totalIncome))
+        insights.append("💸 Total Spent: £").append(String.format("%.2f", totalSpent))
+                .append("\n💰 Total Income: £").append(String.format("%.2f", totalIncome))
                 .append("\n\n");
 
         // 3. Top categories analysis
@@ -60,7 +60,7 @@ public class SpendingAnalyzer {
                 double amount = entry.getValue();
                 double percentage = (amount / totalSpent) * 100;
 
-                insights.append("• ").append(category).append(": $")
+                insights.append("• ").append(category).append(": £")
                         .append(String.format("%.2f", amount))
                         .append(" (").append(String.format("%.1f", percentage)).append("%)\n");
             }
@@ -71,7 +71,7 @@ public class SpendingAnalyzer {
             try {
                 float prediction = predictor.predictNextMonthSpending(
                         getLastNTransactions(transactions, 3));
-                insights.append("\n🔮 AI Prediction: Next month ≈ $")
+                insights.append("\n Next month expenditure prediction ≈ £")
                         .append(String.format("%.2f", prediction));
             } catch (Exception e) {
                 insights.append("\n⚠️ Prediction unavailable");

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +20,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,15 +40,26 @@ public class SavingsGoalsFragment extends Fragment implements SavingsGoalAdapter
     private ExecutorService executor;
     private TextView tvEmptyState;
 
+    private ExtendedFloatingActionButton fabAddGoal;
+
+    private ProgressBar progressTotalSavings;
+    private TextView tvTotalSavings;
+    private double totalSaved = 0;
+    private double totalTarget = 0;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_savings_goals, container, false);
 
+        progressTotalSavings = view.findViewById(R.id.progressTotalSavings);
+        tvTotalSavings = view.findViewById(R.id.tvTotalSavings);
+
         recyclerView = view.findViewById(R.id.recyclerViewSavingsGoals);
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
-        FloatingActionButton fabAddGoal = view.findViewById(R.id.fabAddGoal);
+        fabAddGoal = (ExtendedFloatingActionButton) view.findViewById(R.id.fabAddGoal);
 
         db = AppDatabase.getInstance(requireContext());
         executor = Executors.newSingleThreadExecutor();
@@ -133,13 +148,41 @@ public class SavingsGoalsFragment extends Fragment implements SavingsGoalAdapter
     private void loadGoals() {
         executor.execute(() -> {
             List<SavingsGoal> goals = db.savingsGoalDao().getAllGoals();
+
+            // Calculate totals
+            totalSaved = 0;
+            totalTarget = 0;
+            for (SavingsGoal goal : goals) {
+                totalSaved += goal.currentAmount;
+                totalTarget += goal.targetAmount;
+            }
+
             requireActivity().runOnUiThread(() -> {
                 adapter.setSavingsGoals(goals);
                 updateEmptyState(goals.isEmpty());
+
+                // Update total progress
+                updateTotalProgress();
             });
         });
     }
 
+    private void updateTotalProgress() {
+        if (totalTarget > 0) {
+            int progress = (int) ((totalSaved / totalTarget) * 100);
+            double percentage = (totalSaved / totalTarget) * 100;
+
+            progressTotalSavings.setProgress(progress);
+            tvTotalSavings.setText(String.format(Locale.getDefault(),
+                    "Saved: £%,.2f of £%,.2f (%.1f%%)",
+                    totalSaved,
+                    totalTarget,
+                    percentage));  // Changed to use percentage variable
+        } else {
+            progressTotalSavings.setProgress(0);
+            tvTotalSavings.setText("No savings goals yet");
+        }
+    }
     private void updateEmptyState(boolean isEmpty) {
         if (isEmpty) {
             tvEmptyState.setVisibility(View.VISIBLE);

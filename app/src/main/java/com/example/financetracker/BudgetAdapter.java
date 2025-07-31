@@ -41,13 +41,13 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Budget budget = budgets.get(position);
         holder.tvCategory.setText(budget.category);
-        holder.tvLimit.setText(String.format("Limit: $%.2f", budget.limit));
+        holder.tvLimit.setText(String.format("Limit: £%.2f", budget.limit));
 
         double percentage = (budget.currentSpending / budget.limit) * 100;
         percentage = Math.min(percentage, 100);
 
         holder.progressBar.setProgress((int) percentage);
-        holder.tvSpent.setText(String.format("Spent: $%.2f (%.0f%%)",
+        holder.tvSpent.setText(String.format("Spent: £%.2f (%.0f%%)",
                 budget.currentSpending, percentage));
 
         int color;

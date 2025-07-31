@@ -237,7 +237,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
         protected void onPostExecute(Double total) {
             Context context = contextRef.get();
             if (context != null && isAdded()) {
-                NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+                NumberFormat format = NumberFormat.getCurrencyInstance(Locale.UK);
                 tvBalance.setText(getString(R.string.total_balance, format.format(total)));
             }
         }

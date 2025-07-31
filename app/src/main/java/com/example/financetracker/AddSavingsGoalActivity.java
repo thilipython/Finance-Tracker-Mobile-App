@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.Calendar;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -16,7 +19,8 @@ import java.util.concurrent.Executors;
 public class AddSavingsGoalActivity extends AppCompatActivity {
 
     private EditText etName, etDescription, etTargetAmount;
-    private Button btnDatePicker, btnSave;
+    private TextInputEditText etDatePicker; // Changed from Button to TextInputEditText
+    private MaterialButton btnSave;
     private AppDatabase db;
     private Executor executor = Executors.newSingleThreadExecutor();
     private long selectedDate = System.currentTimeMillis();
@@ -39,11 +43,43 @@ public class AddSavingsGoalActivity extends AppCompatActivity {
         etName = findViewById(R.id.etGoalName);
         etDescription = findViewById(R.id.etGoalDescription);
         etTargetAmount = findViewById(R.id.etTargetAmount);
-        btnDatePicker = findViewById(R.id.btnDatePicker);
+        etDatePicker = findViewById(R.id.etDatePicker); // Matches the XML ID
         btnSave = findViewById(R.id.btnSave);
 
-        // Set initial date text
-        updateDateButtonText();
+        updateDateText();
+    }
+
+    private void setupButtonListeners() {
+        etDatePicker.setOnClickListener(v -> showDatePicker());
+        btnSave.setOnClickListener(v -> saveGoal());
+    }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(selectedDate);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    Calendar selectedCalendar = Calendar.getInstance();
+                    selectedCalendar.set(selectedYear, selectedMonth, selectedDay);
+                    selectedDate = selectedCalendar.getTimeInMillis();
+                    updateDateText();
+                },
+                year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void updateDateText() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(selectedDate);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        etDatePicker.setText(String.format("Target Date: %d/%d/%d", month, day, year));
     }
 
     private void checkEditMode() {
@@ -52,11 +88,6 @@ public class AddSavingsGoalActivity extends AppCompatActivity {
             goalId = getIntent().getIntExtra("GOAL_ID", -1);
             loadGoalData();
         }
-    }
-
-    private void setupButtonListeners() {
-        btnDatePicker.setOnClickListener(v -> showDatePicker());
-        btnSave.setOnClickListener(v -> saveGoal());
     }
 
     private void loadGoalData() {
@@ -74,37 +105,8 @@ public class AddSavingsGoalActivity extends AppCompatActivity {
         etName.setText(goal.name);
         etDescription.setText(goal.description);
         etTargetAmount.setText(String.valueOf(goal.targetAmount));
-
         selectedDate = goal.targetDate;
-        updateDateButtonText();
-    }
-
-    private void showDatePicker() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(selectedDate);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    Calendar selectedCalendar = Calendar.getInstance();
-                    selectedCalendar.set(selectedYear, selectedMonth, selectedDay);
-                    selectedDate = selectedCalendar.getTimeInMillis();
-                    updateDateButtonText();
-                },
-                year, month, day);
-        datePickerDialog.show();
-    }
-
-    private void updateDateButtonText() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(selectedDate);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        btnDatePicker.setText(String.format("Target Date: %d/%d/%d", month, day, year));
+        updateDateText();
     }
 
     private void saveGoal() {

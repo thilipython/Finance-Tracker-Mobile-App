@@ -78,7 +78,7 @@ public class SavingsGoalAdapter extends RecyclerView.Adapter<SavingsGoalAdapter.
         }
 
         public void bind(SavingsGoal goal) {
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.UK);
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
             tvName.setText(goal.name);

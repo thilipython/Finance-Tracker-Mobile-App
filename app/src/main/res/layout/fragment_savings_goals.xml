@@ -1,34 +1,119 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SavingsGoalsFragment">
+    android:background="#2C2C2C">
 
-    <TextView
-        android:id="@+id/tvEmptyState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No savings goals yet.\nClick + to add one!"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewSavingsGoals"
+    <!-- App Bar / Title -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddGoal"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        android:tint="@android:color/white"
-        android:backgroundTint="@color/colorPrimary"/>
+        android:background="@android:color/transparent">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Savings Goals"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#EEEEEE" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- FIXED Total Savings Card OUTSIDE the scroll -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTotalSavings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="#3A3A3A"
+        android:layout_gravity="top">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total Savings Progress"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#CCCCCC" />
+
+            <TextView
+                android:id="@+id/tvTotalSavings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="£70,400 / £200,000"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressTotalSavings"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="12dp"
+                app:trackColor="#555555"
+                app:indicatorColor="#D8A362" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Scrollable goals list -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="160dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvEmptyState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No savings goals yet"
+            android:textSize="15sp"
+            android:textColor="#AAAAAA"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSavingsGoals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingBottom="64dp" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+
+    <!-- Floating Action Button -->
+<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+android:id="@+id/fabAddGoal"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_gravity="bottom|end"
+android:layout_margin="16dp"
+android:text="Add Goal"
+app:icon="@drawable/ic_add"
+app:backgroundTint="#D8A362"
+app:iconTint="@android:color/white" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

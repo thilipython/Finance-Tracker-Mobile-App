@@ -3,60 +3,103 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:padding="16dp">
 
-    <!-- Balance and Tabs -->
+    <!-- Top Section with Logo -->
     <LinearLayout
-        android:id="@+id/topSection"
+        android:id="@+id/headerSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <!-- Only one balance display -->
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/logo_placeholder"
+            android:contentDescription="App Logo" />
 
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-            <LinearLayout
+            android:text="Finance Tracker"
+            android:textColor="@color/textWhite"
+            android:textSize="20sp"
+            android:paddingStart="8dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Welcome Text -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerSection"
+        android:orientation="vertical"
+        android:layout_marginTop="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Relax. Delegate."
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Track your finances with premium service."
+            android:textColor="@color/textGray"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- Tabs Container -->
+    <HorizontalScrollView
+        android:id="@+id/tabsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerSection"
+        android:layout_marginTop="120dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTransactions"
+                style="@style/NovaTabButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:text="Transactions"
+                android:background="@drawable/tab_selected_bg"/>
 
-                <Button
-                    android:id="@+id/btnTransactions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Transactions"
-                    android:background="@drawable/tab_selected_bg"
-                    android:textColor="@color/black"
-                    android:padding="8dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBudgets"
+                style="@style/NovaTabButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Budgets"
+                android:background="@drawable/tab_unselected_bg"/>
 
-                <Button
-                    android:id="@+id/btnBudgets"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Budgets"
-                    android:background="@drawable/tab_unselected_bg"
-                    android:textColor="@color/black"
-                    android:padding="8dp"/>
-
-                <Button
-                    android:id="@+id/btnSavings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Savings"
-                    android:background="@drawable/tab_unselected_bg"/>
-            </LinearLayout>
-        </HorizontalScrollView>
-    </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSavings"
+                style="@style/NovaTabButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Savings"
+                android:background="@drawable/tab_unselected_bg"/>
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <!-- Fragment Container -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/topSection"/>
+        android:layout_below="@id/tabsContainer"
+        android:layout_marginTop="16dp"/>
 </RelativeLayout>

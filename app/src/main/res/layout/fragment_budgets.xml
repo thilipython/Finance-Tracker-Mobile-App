@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#121212"> <!-- Dark background -->
 
+    <!-- Empty State Message -->
     <TextView
         android:id="@+id/tvEmptyState"
         android:layout_width="wrap_content"
@@ -12,15 +14,27 @@
         android:text="@string/empty_budgets_message"
         android:textAlignment="center"
         android:textSize="18sp"
-        android:visibility="gone"/>
+        android:textColor="#AAAAAA"
+        android:visibility="gone"
+        android:padding="16dp"
+        android:background="@drawable/bg_rounded_textview"
+        android:gravity="center"
+        android:layout_margin="12dp"
+        android:elevation="2dp" />
 
+
+    <!-- RecyclerView for Budgets -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewBudgets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="8dp"/>
+        android:padding="8dp"
+        android:layout_above="@id/fabAddBudget"
+        android:layout_below="@+id/tvEmptyState"
+        android:layout_marginBottom="8dp"/>
 
+    <!-- Add Budget Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddBudget"
         android:layout_width="wrap_content"
@@ -31,5 +45,6 @@
         android:contentDescription="@string/add_budget"
         app:srcCompat="@drawable/ic_add"
         app:tint="@android:color/white"
-        app:backgroundTint="?attr/colorPrimary"/>
+        app:backgroundTint="@color/colorAccent"
+    app:elevation="6dp"/>
 </RelativeLayout>

@@ -10,31 +10,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="#E0C68B" /> <!-- Light gold accent color -->
 
     <TextView
         android:id="@+id/tvCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        android:textColor="#CCCCCC" />
 
     <TextView
         android:id="@+id/tvLimit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        android:textColor="#CCCCCC" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="8dp"
         android:layout_marginTop="8dp"
-        android:max="100"/>
+        android:max="100"
+        android:progressTint="#D8A362"
+        android:progressBackgroundTint="#555555" />
 
     <TextView
         android:id="@+id/tvSpent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        android:textColor="#BBBBBB" />
 </LinearLayout>

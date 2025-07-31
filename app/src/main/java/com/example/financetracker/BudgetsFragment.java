@@ -170,7 +170,7 @@ public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetC
                         // Debug log
                         Log.d("Budgets", "Loaded " + budgets.size() + " budgets");
                         for (Budget b : budgets) {
-                            Log.d("Budgets", b.title + " - $" + b.limit);
+                            Log.d("Budgets", b.title + " - £" + b.limit);
                         }
                     });
                 } catch (Exception e) {
