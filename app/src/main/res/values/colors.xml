@@ -40,5 +40,6 @@
     <color name="cardBackground">#292929</color>
 
     <!-- Newly Added Color -->
-    <color name="primary">#4A90E2</color> <!-- Blue for icons etc. -->
+    <color name="primary">#4A90E2</color>
+    <color name="colorOnPrimary">#FFFFFF</color><!-- Blue for icons etc. -->
 </resources>

@@ -6,28 +6,67 @@
     android:background="@color/colorPrimary"
     android:padding="16dp">
 
-    <!-- Top Section with Logo -->
+    <!-- Top Section with Logo and Logout -->
     <LinearLayout
         android:id="@+id/headerSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:weightSum="3">
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/logo_placeholder"
-            android:contentDescription="App Logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Logo Section -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Finance Tracker"
-            android:textColor="@color/textWhite"
-            android:textSize="20sp"
-            android:paddingStart="8dp"
-            android:textStyle="bold" />
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="78dp"
+                android:layout_height="48dp"
+                android:contentDescription="App Logo"
+                android:src="@drawable/logo_placeholder" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gold Track"
+                android:textColor="@color/textWhite"
+                android:textSize="20sp"
+                android:paddingStart="8dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Welcome and Logout -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/tvWelcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome"
+                android:textColor="@color/textWhite"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="@color/textWhite"
+                android:textSize="12sp"
+                android:padding="0dp"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Welcome Text -->
