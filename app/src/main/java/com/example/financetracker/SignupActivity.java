@@ -17,15 +17,22 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        authHelper = new AuthHelper(this);
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        etConfirmPassword = findViewById(R.id.etConfirmPassword);
+        // Initialize views
         Button btnSignup = findViewById(R.id.btnSignup);
+        Button btnLoginRedirect = findViewById(R.id.btnLoginRedirect);
 
-        btnSignup.setOnClickListener(v -> attemptRegistration());
+        // Handle signup button click
+        btnSignup.setOnClickListener(v -> {
+            // Your existing signup logic
+            attemptRegistration();
+        });
+
+        // Fix: Proper redirect to login
+        btnLoginRedirect.setOnClickListener(v -> {
+            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+            finish(); // Close signup activity
+        });
     }
-
     private void attemptRegistration() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();

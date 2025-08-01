@@ -15,22 +15,25 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         authManager = AuthManager.getInstance(this);
+        authHelper = new AuthHelper(this);
+
+        // Initialize views
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+
+        // Check if user is already logged in
         if (authManager.isLoggedIn()) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
 
-        setContentView(R.layout.activity_login);
-
-        authHelper = new AuthHelper(this);
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-
+        // Set click listeners (using correct IDs from XML)
         findViewById(R.id.btnLogin).setOnClickListener(v -> attemptLogin());
-        findViewById(R.id.btnSignup).setOnClickListener(v -> {
+        findViewById(R.id.btnSignupRedirect).setOnClickListener(v -> {
             startActivity(new Intent(this, SignupActivity.class));
         });
     }
@@ -52,16 +55,20 @@ public class LoginActivity extends AppCompatActivity {
         authHelper.login(email, password, new AuthHelper.AuthCallback() {
             @Override
             public void onSuccess(User user) {
-                progress.dismiss();
-                authManager.setLoggedIn(true, user.email);
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
+                runOnUiThread(() -> {
+                    progress.dismiss();
+                    authManager.setLoggedIn(true, user.email);
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                });
             }
 
             @Override
             public void onError(String message) {
-                progress.dismiss();
-                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    progress.dismiss();
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }

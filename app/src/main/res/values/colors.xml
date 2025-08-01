@@ -41,5 +41,6 @@
 
     <!-- Newly Added Color -->
     <color name="primary">#4A90E2</color>
-    <color name="colorOnPrimary">#FFFFFF</color><!-- Blue for icons etc. -->
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorAccentLight">#E8C48C</color>
 </resources>
