@@ -50,18 +50,18 @@ public class SpendingPredictor {
         }
 
         try {
-            // 1. Prepare input (normalized)
+
             float[][] input = new float[1][1];
             input[0][0] = calculateWeightedAverage(pastTransactions) / SCALE_FACTOR;
 
-            // 2. Run prediction
+
             float[][] output = new float[1][1];
             tflite.run(input, output);
 
-            // 3. Return denormalized result
+
             return output[0][0] * SCALE_FACTOR;
         } catch (Exception e) {
-            return 0f; // Fallback value
+            return 0f;
         }
     }
 
@@ -70,9 +70,9 @@ public class SpendingPredictor {
         float weightSum = 0f;
         int count = Math.min(transactions.size(), MONTHS_TO_CONSIDER);
 
-        // Recent months get higher weight
+
         for (int i = 0; i < count; i++) {
-            float weight = (count - i) * 0.5f; // Weighting factor
+            float weight = (count - i) * 0.5f;
             sum += Math.abs(transactions.get(i).amount) * weight;
             weightSum += weight;
         }

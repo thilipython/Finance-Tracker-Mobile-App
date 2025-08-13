@@ -3,7 +3,6 @@ package com.example.financetracker;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,21 +17,21 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         // Initialize views
-        Button btnSignup = findViewById(R.id.btnSignup);
-        Button btnLoginRedirect = findViewById(R.id.btnLoginRedirect);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        etConfirmPassword = findViewById(R.id.etConfirmPassword);
 
-        // Handle signup button click
-        btnSignup.setOnClickListener(v -> {
-            // Your existing signup logic
-            attemptRegistration();
-        });
+        // Initialize AuthHelper
+        authHelper = new AuthHelper(this);
 
-        // Fix: Proper redirect to login
-        btnLoginRedirect.setOnClickListener(v -> {
+        // Set click listeners
+        findViewById(R.id.btnSignup).setOnClickListener(v -> attemptRegistration());
+        findViewById(R.id.btnLoginRedirect).setOnClickListener(v -> {
             startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-            finish(); // Close signup activity
+            finish();
         });
     }
+
     private void attemptRegistration() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
@@ -60,14 +59,20 @@ public class SignupActivity extends AppCompatActivity {
         newUser.email = email;
         newUser.password = password; // Will be hashed in AuthHelper
 
-        // Use RegistrationCallback instead of AuthCallback
+        // Use AuthHelper.RegistrationCallback
         authHelper.register(newUser, new AuthHelper.RegistrationCallback() {
             @Override
             public void onSuccess(User user) {
                 runOnUiThread(() -> {
                     progress.dismiss();
                     Toast.makeText(SignupActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                    finish(); // Return to login activity
+
+                    // Pass credentials to LoginActivity
+                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("password", password);
+                    startActivity(intent);
+                    finish();
                 });
             }
 

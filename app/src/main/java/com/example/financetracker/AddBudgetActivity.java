@@ -24,26 +24,26 @@ public class AddBudgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_add_budget);
 
-        // Initialize views
+
         etTitle = findViewById(R.id.etTitle);
         etLimit = findViewById(R.id.etLimit);
         actvCategory = findViewById(R.id.actvCategory);
         Button btnSave = findViewById(R.id.btnSave);
 
-        // Initialize database
+
         db = AppDatabase.getInstance(getApplicationContext());
 
-        // Check if in edit mode
+
         if (getIntent().hasExtra("EDIT_MODE")) {
             isEditMode = true;
             budgetId = getIntent().getIntExtra("BUDGET_ID", -1);
             loadBudgetData();
         }
 
-        // Setup category dropdown
+
         setupCategoryDropdown();
 
-        // Set save button click listener
+
         btnSave.setOnClickListener(v -> saveBudget());
     }
 
@@ -75,7 +75,6 @@ public class AddBudgetActivity extends AppCompatActivity {
         String category = actvCategory.getText().toString().trim();
         String limitText = etLimit.getText().toString().trim();
 
-        // Validation (unchanged)
         if (title.isEmpty() || category.isEmpty() || limitText.isEmpty()) {
             return;
         }
@@ -86,18 +85,18 @@ public class AddBudgetActivity extends AppCompatActivity {
             budget.title = title;
             budget.category = category;
             budget.limit = limit;
-            budget.currentSpending = 0; // Initialize spending
+            budget.currentSpending = 0;
 
-            // Save to database
+
             executor.execute(() -> {
                 try {
                     db.budgetDao().insert(budget);
 
-                    // Ensure UI updates on main thread
+
                     runOnUiThread(() -> {
                         Toast.makeText(this, "Budget saved successfully", Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
-                        finish(); // Close activity after save
+                        finish();
                     });
                 } catch (Exception e) {
                     runOnUiThread(() ->

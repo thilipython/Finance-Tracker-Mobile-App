@@ -26,6 +26,6 @@ public class SavingsGoal {
 
     @Override
     public String toString() {
-        return name; // This ensures the dropdown shows the goal name
+        return name;
     }
 }

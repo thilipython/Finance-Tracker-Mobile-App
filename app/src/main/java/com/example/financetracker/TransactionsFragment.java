@@ -280,6 +280,6 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
                 }
             }
         }
-    } // This closes DeleteTransactionTask
+    }
 
-} // This closes TransactionsFragment class
+}

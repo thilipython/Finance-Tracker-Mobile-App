@@ -149,7 +149,7 @@ public class SavingsGoalsFragment extends Fragment implements SavingsGoalAdapter
         executor.execute(() -> {
             List<SavingsGoal> goals = db.savingsGoalDao().getAllGoals();
 
-            // Calculate totals
+
             totalSaved = 0;
             totalTarget = 0;
             for (SavingsGoal goal : goals) {
@@ -161,7 +161,7 @@ public class SavingsGoalsFragment extends Fragment implements SavingsGoalAdapter
                 adapter.setSavingsGoals(goals);
                 updateEmptyState(goals.isEmpty());
 
-                // Update total progress
+
                 updateTotalProgress();
             });
         });
@@ -177,7 +177,7 @@ public class SavingsGoalsFragment extends Fragment implements SavingsGoalAdapter
                     "Saved: £%,.2f of £%,.2f (%.1f%%)",
                     totalSaved,
                     totalTarget,
-                    percentage));  // Changed to use percentage variable
+                    percentage));
         } else {
             progressTotalSavings.setProgress(0);
             tvTotalSavings.setText("No savings goals yet");

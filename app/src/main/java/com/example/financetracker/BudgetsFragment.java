@@ -167,7 +167,7 @@ public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetC
                         adapter.setBudgets(budgets);
                         updateEmptyState(budgets);
 
-                        // Debug log
+
                         Log.d("Budgets", "Loaded " + budgets.size() + " budgets");
                         for (Budget b : budgets) {
                             Log.d("Budgets", b.title + " - £" + b.limit);

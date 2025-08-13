@@ -32,7 +32,7 @@ public class InsightsFragment extends Fragment {
 
         Button btnInsights = view.findViewById(R.id.btnShowInsights);
         btnInsights.setOnClickListener(v -> {
-            // Create and show Insights dialog
+
             new AlertDialog.Builder(requireContext())
                     .setTitle("Spending Insights")
                     .setMessage("Insights will appear here after Step 2")
@@ -53,7 +53,7 @@ public class InsightsFragment extends Fragment {
     private class AnalyzeTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
-            // We'll implement the analysis logic in Step 2
+
             return "Analysis coming in Step 2!";
         }
 

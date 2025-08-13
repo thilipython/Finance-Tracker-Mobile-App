@@ -342,13 +342,13 @@ public class AddTransactionActivity extends AppCompatActivity {
                 transaction.isGoalDeposit = true;
                 transaction.goalId = goal.id;
 
-                // Validate allocation doesn't exceed goal target
+
                 if ((goal.currentAmount + allocationAmount) > goal.targetAmount) {
                     throw new IllegalArgumentException("Allocation would exceed goal target");
                 }
 
-                // Set the actual allocation amount (fix for your issue)
-                transaction.amount = allocationAmount; // This ensures only the allocated amount is saved
+
+                transaction.amount = allocationAmount;
                 break;
             }
         }

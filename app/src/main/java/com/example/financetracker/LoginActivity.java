@@ -20,18 +20,18 @@ public class LoginActivity extends AppCompatActivity {
         authManager = AuthManager.getInstance(this);
         authHelper = new AuthHelper(this);
 
-        // Initialize views
+
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
 
-        // Check if user is already logged in
+
         if (authManager.isLoggedIn()) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
 
-        // Set click listeners (using correct IDs from XML)
+
         findViewById(R.id.btnLogin).setOnClickListener(v -> attemptLogin());
         findViewById(R.id.btnSignupRedirect).setOnClickListener(v -> {
             startActivity(new Intent(this, SignupActivity.class));
