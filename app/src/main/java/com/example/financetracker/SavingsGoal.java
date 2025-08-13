@@ -19,7 +19,7 @@ public class SavingsGoal {
     public double currentAmount = 0;
 
     @ColumnInfo(name = "target_date")
-    public long targetDate; // timestamp
+    public long targetDate;
 
     @ColumnInfo(name = "created_at")
     public long createdAt = System.currentTimeMillis();

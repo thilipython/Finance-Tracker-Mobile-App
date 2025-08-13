@@ -131,7 +131,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                 etAllocationAmount.setError(null);
             }
         } catch (NumberFormatException e) {
-            // Ignore invalid inputs
+
         }
     }
 
@@ -202,7 +202,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                 etAllocationAmount.setText(String.format(Locale.getDefault(), "%.2f", suggestedAllocation));
             }
         } catch (NumberFormatException e) {
-            // Amount not entered yet
+
         }
     }
 
@@ -385,7 +385,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         private void updateGoalAllocation(Transaction transaction) {
             SavingsGoal goal = db.savingsGoalDao().getGoalById(transaction.goalId);
             if (goal != null) {
-                goal.currentAmount += Math.abs(transaction.amount); // Use the allocated amount
+                goal.currentAmount += Math.abs(transaction.amount);
                 db.savingsGoalDao().update(goal);
             }
         }

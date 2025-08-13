@@ -43,7 +43,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaction transaction = transactions.get(position);
 
-        // Set all fields
+
         holder.tvTitle.setText(transaction.title);
         holder.tvCategory.setText(transaction.category);
 
@@ -63,7 +63,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.tvDate.setVisibility(View.GONE);
         }
 
-        // Set click listeners
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onTransactionClick(transaction);

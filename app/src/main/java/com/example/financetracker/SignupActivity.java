@@ -16,15 +16,14 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        // Initialize views
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
 
-        // Initialize AuthHelper
+
         authHelper = new AuthHelper(this);
 
-        // Set click listeners
+
         findViewById(R.id.btnSignup).setOnClickListener(v -> attemptRegistration());
         findViewById(R.id.btnLoginRedirect).setOnClickListener(v -> {
             startActivity(new Intent(SignupActivity.this, LoginActivity.class));
@@ -37,7 +36,7 @@ public class SignupActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-        // Validate inputs
+
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Email and password cannot be empty", Toast.LENGTH_SHORT).show();
             return;
@@ -48,16 +47,16 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        // Show loading indicator
+
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Registering...");
         progress.setCancelable(false);
         progress.show();
 
-        // Create new user
+
         User newUser = new User();
         newUser.email = email;
-        newUser.password = password; // Will be hashed in AuthHelper
+        newUser.password = password;
 
         // Use AuthHelper.RegistrationCallback
         authHelper.register(newUser, new AuthHelper.RegistrationCallback() {
@@ -67,7 +66,7 @@ public class SignupActivity extends AppCompatActivity {
                     progress.dismiss();
                     Toast.makeText(SignupActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
 
-                    // Pass credentials to LoginActivity
+
                     Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                     intent.putExtra("email", email);
                     intent.putExtra("password", password);

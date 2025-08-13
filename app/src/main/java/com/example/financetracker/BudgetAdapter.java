@@ -74,8 +74,8 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
     }
 
     public void setBudgets(List<Budget> newBudgets) {
-        this.budgets = new ArrayList<>(newBudgets); // Create new list to force refresh
-        notifyDataSetChanged(); // Important: trigger UI update
+        this.budgets = new ArrayList<>(newBudgets);
+        notifyDataSetChanged();
     }
 
     public Budget getBudgetAtPosition(int position) {

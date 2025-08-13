@@ -90,7 +90,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
     @Override
     public void onTransactionClick(Transaction transaction) {
-        // Handle click (edit)
+
         Intent intent = new Intent(getActivity(), AddTransactionActivity.class);
         intent.putExtra("EDIT_MODE", true);
         intent.putExtra("TRANSACTION_ID", transaction.id);
@@ -99,7 +99,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
     @Override
     public void onTransactionLongClick(Transaction transaction) {
-        // Handle long click (delete confirmation)
+
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Transaction")
                 .setMessage("Are you sure you want to delete this transaction?")

@@ -12,14 +12,14 @@ import java.util.List;
 
 @Dao
 public interface BudgetDao {
-    // Insert operations
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Budget budget);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertWithConflict(Budget budget);
 
-    // Read operations
+
     @Transaction
     @Query("SELECT * FROM budgets WHERE category = :category LIMIT 1")
     Budget getBudgetByCategory(String category);
@@ -30,14 +30,14 @@ public interface BudgetDao {
     @Query("SELECT * FROM budgets WHERE id = :id")
     Budget getBudgetById(int id);
 
-    // Update operations
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     int update(Budget budget);
 
     @Query("UPDATE budgets SET current_spending = current_spending + :amount WHERE category = :category")
     int addToSpending(String category, double amount);
 
-    // Delete operations
+
     @Delete
     int delete(Budget budget);
 

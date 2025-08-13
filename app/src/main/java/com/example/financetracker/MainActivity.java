@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize components
+
         initializeComponents();
         setupUI();
         setupListeners();
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.btnLogout);
         tvWelcome = findViewById(R.id.tvWelcome);
 
-        // Set welcome message
+
         String userEmail = authManager.getCurrentUserEmail();
         tvWelcome.setText(userEmail != null ? "Welcome, " + userEmail : "Welcome");
     }
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     private void performLogout() {
         authManager.logout();
 
-        // Show loading indicator
+
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Logging out...");
         progress.setCancelable(false);

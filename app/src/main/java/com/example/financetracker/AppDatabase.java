@@ -27,15 +27,15 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract SavingsGoalDao savingsGoalDao();
     public abstract UserDao userDao();
 
-    // Migration from version 1 to 2
+
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // Initial tables were created in version 1
+
         }
     };
 
-    // Migration from version 2 to 3 (added budgets table)
+
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
@@ -47,51 +47,51 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    // Migration from version 3 to 4
+
     static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // No schema changes in this version
+
         }
     };
 
-    // Migration from version 4 to 5
+
     static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // No schema changes in this version
+
         }
     };
 
-    // Migration from version 5 to 6
+
     static final Migration MIGRATION_5_6 = new Migration(5, 6) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // No schema changes in this version
+
         }
     };
 
-    // Migration from version 6 to 7
+
     static final Migration MIGRATION_6_7 = new Migration(6, 7) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // No schema changes in this version
+
         }
     };
 
-    // Migration from version 7 to 8
+
     static final Migration MIGRATION_7_8 = new Migration(7, 8) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // No schema changes in this version
+
         }
     };
 
-    // Migration from version 8 to 9 (fixes users table)
+
     static final Migration MIGRATION_8_9 = new Migration(8, 9) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // Recreate users table with correct schema
+
             db.execSQL("DROP TABLE IF EXISTS users");
             db.execSQL("CREATE TABLE users (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
@@ -137,7 +137,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static void createAllTables(SupportSQLiteDatabase db) {
-        // Create transactions table
+
         db.execSQL("CREATE TABLE IF NOT EXISTS transactions (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "title TEXT, amount REAL NOT NULL, " +
@@ -146,7 +146,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 "is_goal_deposit INTEGER NOT NULL DEFAULT 0, " +
                 "goal_id INTEGER NOT NULL DEFAULT -1)");
 
-        // Create budgets table
+
         db.execSQL("CREATE TABLE IF NOT EXISTS budgets (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "title TEXT, category TEXT, " +
@@ -154,7 +154,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 "current_spending REAL NOT NULL DEFAULT 0, " +
                 "created_at INTEGER NOT NULL DEFAULT 0)");
 
-        // Create savings_goals table
+
         db.execSQL("CREATE TABLE IF NOT EXISTS savings_goals (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "name TEXT, description TEXT, " +
@@ -163,7 +163,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 "target_date INTEGER NOT NULL, " +
                 "created_at INTEGER NOT NULL)");
 
-        // Create users table
+
         db.execSQL("CREATE TABLE IF NOT EXISTS users (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "email TEXT NOT NULL, " +

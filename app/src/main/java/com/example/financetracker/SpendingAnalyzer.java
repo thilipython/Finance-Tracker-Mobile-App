@@ -24,7 +24,7 @@ public class SpendingAnalyzer {
     public String analyze() {
         List<Transaction> transactions = db.transactionDao().getAll();
 
-        // 1. Calculate totals
+
         double totalSpent = 0;
         double totalIncome = 0;
         HashMap<String, Double> categorySpending = new HashMap<>();
@@ -40,13 +40,13 @@ public class SpendingAnalyzer {
             }
         }
 
-        // 2. Generate insights
+
         StringBuilder insights = new StringBuilder();
         insights.append("💸 Total Spent: £").append(String.format("%.2f", totalSpent))
                 .append("\n💰 Total Income: £").append(String.format("%.2f", totalIncome))
                 .append("\n\n");
 
-        // 3. Top categories analysis
+
         if (!categorySpending.isEmpty()) {
             insights.append("📊 Spending Breakdown:\n");
             List<Map.Entry<String, Double>> sortedCategories =
@@ -66,7 +66,7 @@ public class SpendingAnalyzer {
             }
         }
 
-        // 4. AI Prediction
+
         if (predictor != null && transactions.size() >= 3) {
             try {
                 float prediction = predictor.predictNextMonthSpending(
@@ -78,7 +78,7 @@ public class SpendingAnalyzer {
             }
         }
 
-        // 5. Savings advice
+
         if (totalSpent > 0 && totalIncome > 0) {
             double savingsRate = ((totalIncome - totalSpent) / totalIncome) * 100;
             insights.append("\n\n💡 Advice:\n");

@@ -9,7 +9,7 @@ public class Budget {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    public String title;  // This is the new field
+    public String title;
     public String category;
     public double limit;
 

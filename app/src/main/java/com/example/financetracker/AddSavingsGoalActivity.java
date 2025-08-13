@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class AddSavingsGoalActivity extends AppCompatActivity {
 
     private EditText etName, etDescription, etTargetAmount;
-    private TextInputEditText etDatePicker; // Changed from Button to TextInputEditText
+    private TextInputEditText etDatePicker;
     private MaterialButton btnSave;
     private AppDatabase db;
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -43,7 +43,7 @@ public class AddSavingsGoalActivity extends AppCompatActivity {
         etName = findViewById(R.id.etGoalName);
         etDescription = findViewById(R.id.etGoalDescription);
         etTargetAmount = findViewById(R.id.etTargetAmount);
-        etDatePicker = findViewById(R.id.etDatePicker); // Matches the XML ID
+        etDatePicker = findViewById(R.id.etDatePicker);
         btnSave = findViewById(R.id.btnSave);
 
         updateDateText();

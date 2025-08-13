@@ -67,14 +67,14 @@ public class AuthHelper {
                     return;
                 }
 
-                // Check if email already exists
+
                 User existingUser = userDao.getUserByEmail(user.email);
                 if (existingUser != null) {
                     notifyRegistrationError(callback, "Email already registered");
                     return;
                 }
 
-                // Hash password before storing
+
                 user.password = SecurityUtils.hashPassword(user.password);
                 long userId = userDao.insert(user);
 
@@ -94,11 +94,11 @@ public class AuthHelper {
     public void logout(LogoutCallback callback) {
         executor.execute(() -> {
             try {
-                // Perform any cleanup operations here
-                // For example: userDao.clearSessionData();
 
-                // Simulate logout process
-                Thread.sleep(500); // Remove this in production
+
+
+
+                Thread.sleep(500);
 
                 mainHandler.post(() -> callback.onLogoutComplete());
             } catch (Exception e) {

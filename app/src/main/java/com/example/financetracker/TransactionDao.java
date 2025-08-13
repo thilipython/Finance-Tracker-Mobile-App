@@ -12,12 +12,12 @@ import java.util.List;
 @Dao
 public interface TransactionDao {
     @Insert
-    long insert(Transaction transaction); // Change return type from void to long
+    long insert(Transaction transaction);
 
     @Query("SELECT * FROM transactions")
     List<Transaction> getAll();
 
-    // Add this for debugging
+
     @Query("SELECT COUNT(*) FROM transactions")
     int getCount();
 

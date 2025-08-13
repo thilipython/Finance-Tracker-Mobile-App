@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SpendingPredictor {
     private final Interpreter tflite;
-    private static final float SCALE_FACTOR = 1500f; // Must match Python script's scaling
+    private static final float SCALE_FACTOR = 1500f;
     private static final int MONTHS_TO_CONSIDER = 3;
 
     public SpendingPredictor(Context context) throws IOException, IllegalArgumentException {

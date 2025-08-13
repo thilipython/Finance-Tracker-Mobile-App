@@ -18,7 +18,7 @@ public class SecurityUtils {
                 hexString.append(hex);
             }
 
-            // Add logging
+
             Log.d("SecurityUtils", "Hashed password for '" + plainText + "': " + hexString.toString());
 
             return hexString.toString();

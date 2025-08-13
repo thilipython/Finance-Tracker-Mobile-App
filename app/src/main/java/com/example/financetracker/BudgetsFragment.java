@@ -154,7 +154,7 @@ public class BudgetsFragment extends Fragment implements BudgetAdapter.OnBudgetC
         public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
             if (resultCode == Activity.RESULT_OK) {
-                // Force refresh budgets when returning from AddBudgetActivity
+
                 loadBudgets();
             }
         }
